@@ -112,7 +112,7 @@ class AStarSearch(object):
                         break
                     i = i+1
                 if i<length: # already in closed list, ignore it
-                    break
+                    continue
                 # check if the node in open list or not
                 j = 0
                 length = len(self.__mOpenList.heap)
@@ -125,6 +125,9 @@ class AStarSearch(object):
                     if new_pathNode.g < self.__mOpenList.heap[j].g:
                         self.__mOpenList.delete(j)
                         self.__mOpenList.insert(new_pathNode)
+                else:
+                    new_pathNode = PathNode(cur, candidate, self.__goal)
+                    self.__mOpenList.insert(new_pathNode)
     def print_path(self):
         path = []
         if not self.__mClosedList[-1].gridNode.isSameNode(self.__goal):
@@ -173,7 +176,7 @@ if __name__ == '__main__':
                   1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,]#19
     gridMap = GridMap(20, 20, global_map)
     startNode = GridNode(gridMap, 0, 0)
-    goalNode = GridNode(gridMap, 15, 0)
+    goalNode = GridNode(gridMap, 19, 19)
     astarSearch = AStarSearch(gridMap, startNode, goalNode)
     if astarSearch.find_path():
         astarSearch.print_path()

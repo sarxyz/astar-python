@@ -12,16 +12,16 @@ class GridMap(object):
     """
 
     def __init__(self, width, height, data):
-        self._width = width
-        self._height = height
-        self._map = data
+        self.__width = width
+        self.__height = height
+        self.__map = data
 
     def getWidth(self):
-        return self._width
+        return self.__width
     def getHeight(self):
-        return self._height
+        return self.__height
     def getNode(self, x, y):
-        return self._map[x*self._height+y]
+        return self.__map[x*self.__height+y]
 
 if __name__ == '__main__':
     pass

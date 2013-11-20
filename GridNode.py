@@ -29,12 +29,12 @@ class GridNode(object):
             if self.__xPos < 0 or self.__xPos >= width or self.__yPos < 0 or self.__yPos >= height:
                 return False
             else:
-                return self.__map.getNode(self.__xPos, self.__yPos)==9
+                return self.__map.getNode(self.__xPos, self.__yPos)==1
     def getCost(self):
         return self.__map.getNode(self.__xPos, self.__yPos)
 
     def isSameNode(self, rhs):
-        if self.__map == rhs.__map and self.__xPos == rhs.__xPos and self.__yPos == self.__yPos:
+        if self.__map == rhs.__map and self.__xPos == rhs.__xPos and self.__yPos == rhs.__yPos:
             return True
         return False
 
