@@ -16,6 +16,15 @@ def getHeuristicCost(a, b):
     """
     return abs(a.getX()-b.getX()) + abs(a.getY()-b.getY())
 
+def compare(opx, opy):
+    """Self-defined compare function for type of PathNode
+    """
+    if opx.f > opy.f:
+        return 1
+    elif opx.f < opy.f:
+        return -1
+    else:
+        return 0
 
 class PathNode(object):
     """
@@ -45,9 +54,9 @@ class AStarSearch(object):
         @param goal: goal node(GridNode)
         """
         self.__gridMap = gridMap
-        self.__start = PathNode(None, start)
+        self.__start = PathNode(None, start, goal)
         self.__goal = goal
-        self.__mOpenList = []
+        self.__mOpenList = [] # heap
         self.__mClosedList = []
         self.__width = self.__gridMap.getWidth()
         self.__height = self.__gridMap.getHeight()
@@ -82,66 +91,91 @@ class AStarSearch(object):
 
     def find_path(self):
         node = self.__start
-        self.__mOpenList.append(node)
-        self.__mOpenList = Heap(self.__mOpenList).heap
-        while self.__mOpenList:
-            cur = self.__mOpenList[0]
-            self.__mOpenList.remove(0)
-            self.__mOpenList = Heap(self.__mOpenList).heap
+        self.__mOpenList = Heap(None, compare)
+        self.__mOpenList.insert(node)
+        while True:
+            # pop the node which has the smallest f
+            cur = self.__mOpenList.delete(0)
+            if cur == None: # the heap is empty
+                return False
+            if cur.gridNode.isSameNode(self.__goal): # success
+                self.__mClosedList.append(cur)
+                return True
             self.__mClosedList.append(cur)
-            candidates = self.get_successors(cur)
+            candidates = self.get_successors(cur.gridNode)
             # check if the node in closed list or not
             for candidate in candidates:
                 i = 0
                 length = len(self.__mClosedList)
                 while i<length:
-                    if candidate.gridNode.isSameNode(self.__mClosedList[i].gridNode):
+                    if candidate.isSameNode(self.__mClosedList[i].gridNode):
                         break
+                    i = i+1
                 if i<length: # already in closed list, ignore it
                     break
-            # check if the node in open list or not
-            for candidate in candidates:
-                i = 0
-                length = len(self.__mOpenList)
-                while i<length:
-                    if candidate.gridNode.isSameNode(self.__mOpenList[i].gridNode):
+                # check if the node in open list or not
+                j = 0
+                length = len(self.__mOpenList.heap)
+                while j<length:
+                    if candidate.isSameNode(self.__mOpenList.heap[j].gridNode):
                         break
-                if i<length: # already in open list,
-                    pathNode = PathNode(cur, candidate, self.__goal)
-
-
+                    j = j+1
+                if j<length: # already in open list,
+                    new_pathNode = PathNode(cur, candidate, self.__goal)
+                    if new_pathNode.g < self.__mOpenList.heap[j].g:
+                        self.__mOpenList.delete(j)
+                        self.__mOpenList.insert(new_pathNode)
+    def print_path(self):
+        path = []
+        if not self.__mClosedList[-1].gridNode.isSameNode(self.__goal):
+            print 'Path not found'
+        else:
+            parent = self.__mClosedList[-1]
+            path.insert(0, parent)
+            while True:
+                if parent.gridNode.isSameNode(self.__start.gridNode):
+                    path.insert(0, parent)
+                    # path.append(parent)
+                    break
                 else:
-                    pass
-            
-
+                    for x in self.__mClosedList:
+                        if parent.gridNode.isSameNode(x.gridNode):
+                            path.insert(0, parent)
+                            # path.append(parent)
+                            parent = x.parent
+            for x in path:
+                x.gridNode.printNode()
 
 if __name__ == '__main__':
     width = 20
     height = 20
     # 20*20
-    global_map = [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
-                  1,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,1,
-                  1,9,9,1,1,9,9,9,1,9,1,9,1,9,1,9,9,9,1,1,
-                  1,9,9,1,1,9,9,9,1,9,1,9,1,9,1,9,9,9,1,1,
-                  1,9,1,1,1,1,9,9,1,9,1,9,1,1,1,1,9,9,1,1,
-                  1,9,1,1,9,1,1,1,1,9,1,1,1,1,9,1,1,1,1,1,
-                  1,9,9,9,9,1,1,1,1,1,1,9,9,9,9,1,1,1,1,1,
-                  1,9,9,9,9,9,9,9,9,1,1,1,9,9,9,9,9,9,9,1,
-                  1,9,1,1,1,1,1,1,1,1,1,9,1,1,1,1,1,1,1,1,
-                  1,9,1,9,9,9,9,9,9,9,1,1,9,9,9,9,9,9,9,1,
-                  1,9,1,1,1,1,9,1,1,9,1,1,1,1,1,1,1,1,1,1,
-                  1,9,9,9,9,9,1,9,1,9,1,9,9,9,9,9,1,1,1,1,
-                  1,9,1,9,1,9,9,9,1,9,1,9,1,9,1,9,9,9,1,1,
-                  1,9,1,9,1,9,9,9,1,9,1,9,1,9,1,9,9,9,1,1,
-                  1,9,1,1,1,1,9,9,1,9,1,9,1,1,1,1,9,9,1,1,
-                  1,9,1,1,9,1,1,1,1,9,1,1,1,1,9,1,1,1,1,1,
-                  1,9,9,9,9,1,1,1,1,1,1,9,9,9,9,1,1,1,1,1,
-                  1,1,9,9,9,9,9,9,9,1,1,1,9,9,9,1,9,9,9,9,
-                  1,9,1,1,1,1,1,1,1,1,1,9,1,1,1,1,1,1,1,1,
-                  1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,]
+    #            0001020304050607080910111213141516171819
+    global_map = [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1, #00
+                  1,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,1, #01
+                  1,9,9,1,1,9,9,9,1,9,1,9,1,9,1,9,9,9,1,1, #02
+                  1,9,9,1,1,9,9,9,1,9,1,9,1,9,1,9,9,9,1,1, #03
+                  1,9,1,1,1,1,9,9,1,9,1,9,1,1,1,1,9,9,1,1, #04
+                  1,9,1,1,9,1,1,1,1,9,1,1,1,1,9,1,1,1,1,1, #05
+                  1,9,9,9,9,1,1,1,1,1,1,9,9,9,9,1,1,1,1,1, #06
+                  1,9,9,9,9,9,9,9,9,1,1,1,9,9,9,9,9,9,9,1, #07
+                  1,9,1,1,1,1,1,1,1,1,1,9,1,1,1,1,1,1,1,1, #08
+                  1,9,1,9,9,9,9,9,9,9,1,1,9,9,9,9,9,9,9,1, #09
+                  1,9,1,1,1,1,9,1,1,9,1,1,1,1,1,1,1,1,1,1, #10
+                  1,9,9,9,9,9,1,9,1,9,1,9,9,9,9,9,1,1,1,1, #11
+                  1,9,1,9,1,9,9,9,1,9,1,9,1,9,1,9,9,9,1,1, #12
+                  1,9,1,9,1,9,9,9,1,9,1,9,1,9,1,9,9,9,1,1, #13
+                  1,9,1,1,1,1,9,9,1,9,1,9,1,1,1,1,9,9,1,1, #14
+                  1,9,1,1,9,1,1,1,1,9,1,1,1,1,9,1,1,1,1,1, #15
+                  1,9,9,9,9,1,1,1,1,1,1,9,9,9,9,1,1,1,1,1, #16
+                  1,1,9,9,9,9,9,9,9,1,1,1,9,9,9,1,9,9,9,9, #17
+                  1,9,1,1,1,1,1,1,1,1,1,9,1,1,1,1,1,1,1,1, #18
+                  1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,]#19
     gridMap = GridMap(20, 20, global_map)
-    startNode = GridNode(gridMap, 1, 1)
-    goalNode = GridNode(gridMap, 19, 15)
+    startNode = GridNode(gridMap, 0, 0)
+    goalNode = GridNode(gridMap, 15, 0)
     astarSearch = AStarSearch(gridMap, startNode, goalNode)
-
-    astarSearch.find_path()
+    if astarSearch.find_path():
+        astarSearch.print_path()
+    else:
+        print 'Path not found'

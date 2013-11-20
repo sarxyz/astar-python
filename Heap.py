@@ -36,17 +36,17 @@ class Heap(object):
         self.__sift_up(length)
     def delete(self, pos):
         if pos >= len(self.heap) or pos < 0:
-            return -1
+            return None
         else:
             tmp = self.heap[-1]
             self.heap[-1] = self.heap[pos]
             self.heap[pos] = tmp
-            self.heap.pop()
+            ret = self.heap.pop()
             if (pos+1)/2-1 >= 0 and self.pCompareFunc(self.heap[pos], self.heap[(pos+1)/2-1]) == -1:
                 self.__sift_up(pos)
             elif 2*pos+1 < len(self.heap):
                 self.__sift_down(pos)
-            return 0
+            return ret
     def makeHeap(self, data):
         self.heap = []
         for x in data:

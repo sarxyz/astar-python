@@ -34,9 +34,12 @@ class GridNode(object):
         return self.__map.getNode(self.__xPos, self.__yPos)
 
     def isSameNode(self, rhs):
-        if self.__map == rhs.__map and self.__xPos == rhs.__map and self.__yPos == self.__yPos:
+        if self.__map == rhs.__map and self.__xPos == rhs.__xPos and self.__yPos == self.__yPos:
             return True
         return False
+
+    def printNode(self):
+        print '<%d, %d>'%(self.__xPos, self.__yPos)
 
 
 if __name__ == '__main__':
