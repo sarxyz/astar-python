@@ -53,15 +53,15 @@ def test():
     libbmp.bmp_save.restype = c_bool
     libbmp.bmp_save.argtypes = [POINTER(BMP_FILE), c_char_p]
 
-    pixel = RGB_PIXEL(0x30, 0x0, 0x0, 0xff)
+    pixel = RGB_PIXEL(0xff, 0x0, 0x0, 0x00)
     # libbmp.bmp_print_pixel(pixel)
     # libbmp.bmp_print_pixel_by_pointer(byref(pixel))
     # ret = libbmp.bmp_return_pixel_pointer()
     # libbmp.bmp_print_pixel_by_pointer(ret)
 
-    bmp_file = libbmp.bmp_create(1000, 1000, 1)
-    for i in range(1000):
-        for j in range(1000):
+    bmp_file = libbmp.bmp_create(800, 600, 32)
+    for i in range(800):
+        for j in range(600):
             ret = libbmp.bmp_set_pixel(bmp_file, i, j, pixel)
     ret = libbmp.bmp_save(bmp_file, "test.bmp")
     print ret
