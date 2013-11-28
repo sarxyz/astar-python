@@ -42,9 +42,6 @@ class PathNode(object):
             self.h = getHeuristicCost(self.gridNode, goal)
             self.f = self.g + self.h
 
-
-
-
 class AStarSearch(object):
     """class comments here
     """
@@ -138,16 +135,34 @@ class AStarSearch(object):
             while True:
                 if parent.gridNode.isSameNode(self.__start.gridNode):
                     path.insert(0, parent)
-                    # path.append(parent)
                     break
                 else:
                     for x in self.__mClosedList:
                         if parent.gridNode.isSameNode(x.gridNode):
                             path.insert(0, parent)
-                            # path.append(parent)
                             parent = x.parent
             for x in path:
                 x.gridNode.printNode()
+
+    def get_pathMap(self):
+        pathMap = self.__gridMap
+        if not self.__mClosedList[-1].gridNode.isSameNode(self.__goal):
+            print 'Path not found'
+            return None
+        else:
+            parent = self.__mClosedList[-1]
+            pathMap.setNode(parent.gridNode.getX(), parent.gridNode.getY(), 3)
+            parent = parent.parent
+            while True:
+                if parent.gridNode.isSameNode(self.__start.gridNode):
+                    pathMap.setNode(parent.gridNode.getX(), parent.gridNode.getY(), 2)
+                    break
+                else:
+                    for x in self.__mClosedList:
+                        if parent.gridNode.isSameNode(x.gridNode):
+                            pathMap.setNode(parent.gridNode.getX(), parent.gridNode.getY(), 4)
+                            parent = x.parent
+            return pathMap
 
 if __name__ == '__main__':
     width = 20
@@ -175,10 +190,17 @@ if __name__ == '__main__':
                   1,9,1,1,1,1,1,1,1,1,1,9,1,1,1,1,1,1,1,1, #18
                   1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,]#19
     gridMap = GridMap(20, 20, global_map)
-    startNode = GridNode(gridMap, 0, 0)
-    goalNode = GridNode(gridMap, 19, 19)
+    print '----------Original Map----------------------------'
+    gridMap.printMap()
+    gridMap.write_bmp(24, 'map.bmp')
+    startNode = GridNode(gridMap, 2, 5)
+    goalNode = GridNode(gridMap, 2, 12)
     astarSearch = AStarSearch(gridMap, startNode, goalNode)
     if astarSearch.find_path():
-        astarSearch.print_path()
+        # astarSearch.print_path()
+        print '----------Path Map----------------------------'
+        path_map = astarSearch.get_pathMap()
+        path_map.printMap()
+        path_map.write_bmp(24, 'path.bmp')
     else:
         print 'Path not found'

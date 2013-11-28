@@ -1,12 +1,13 @@
 #!/usr/bin/python
 # --*coding: utf-8*--
 
-"""file comments here
+"""We use libbmp (written in C) to read or write bmp files.
+Now, we call c code via ctypes, which should be changed later.
+Data structures are defined in this file.
 """
 __author__ = 'hjason'
 __email__ = 'hjason2042@gmail.com'
 
-import sys
 from ctypes import *
 
 class RGB_PIXEL(Structure):
@@ -40,32 +41,15 @@ class BMP_FILE(Structure):
                ("dib", BMP_DIB_V3_HEADER),
                ("pixels", POINTER(POINTER(RGB_PIXEL))),
                ("colors", POINTER(RGB_PIXEL))]
-def test():
-    libbmp = CDLL("libbmp.dylib")
 
-    # libbmp.bmp_print_pixel.argtypes = [RGB_PIXEL]
-    # libbmp.bmp_print_pixel_by_pointer.argtypes = [POINTER(RGB_PIXEL)]
-    # libbmp.bmp_return_pixel_pointer.restype = POINTER(RGB_PIXEL)
-    libbmp.bmp_create.restype = POINTER(BMP_FILE)
-    libbmp.bmp_create.argtypes = [c_uint32, c_uint32, c_uint32]
-    libbmp.bmp_set_pixel.restype = c_bool
-    libbmp.bmp_set_pixel.argtypes = [POINTER(BMP_FILE), c_uint32, c_uint32, RGB_PIXEL]
-    libbmp.bmp_save.restype = c_bool
-    libbmp.bmp_save.argtypes = [POINTER(BMP_FILE), c_char_p]
+blue = RGB_PIXEL(0xe1, 0x69, 0x41, 0)
+green = RGB_PIXEL(0, 0xff, 0, 0)
+red = RGB_PIXEL(0, 0, 0xff, 0)
 
-    pixel = RGB_PIXEL(0xff, 0x0, 0x0, 0x00)
-    # libbmp.bmp_print_pixel(pixel)
-    # libbmp.bmp_print_pixel_by_pointer(byref(pixel))
-    # ret = libbmp.bmp_return_pixel_pointer()
-    # libbmp.bmp_print_pixel_by_pointer(ret)
-
-    bmp_file = libbmp.bmp_create(800, 600, 32)
-    for i in range(800):
-        for j in range(600):
-            ret = libbmp.bmp_set_pixel(bmp_file, i, j, pixel)
-    ret = libbmp.bmp_save(bmp_file, "test.bmp")
-    print ret
-
+black = RGB_PIXEL(0, 0, 0, 0)
+white = RGB_PIXEL(0xff, 0xff, 0xff, 0)
+yellow = RGB_PIXEL(0x0, 0xff, 0xff, 0)
+grey = RGB_PIXEL(0xbe, 0xbe, 0xbe, 0)
 
 if __name__ == '__main__':
-    test()
+    pass
