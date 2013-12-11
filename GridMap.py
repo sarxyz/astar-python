@@ -37,7 +37,7 @@ class GridMap(object):
                 print self.getNode(i, j),
             print ''
 
-    def write_bmp(self, depth, filename):
+    def write_bmp(self, depth, scale, filename):
         """Color definition
 start       green   2
 goal        red     3
@@ -49,18 +49,18 @@ non-obst    white   1
         width = self.getWidth()
         height = self.getHeight()
         libbmp = BmpLib()
-        libbmp.create(width*100, height*100, depth)
-        for j in range(height*100):
-            for i in range(width*100):
-                if i%100<5 or j%100<5:
+        libbmp.create(width*scale, height*scale, depth)
+        for j in range(height*scale):
+            for i in range(width*scale):
+                if i%scale<2 or j%scale<2:
                     libbmp.set_pixel(i, j, black)
-                elif self.getNode(i/100, j/100) == 1:
+                elif self.getNode(i/scale, j/scale) == 1:
                     libbmp.set_pixel(i, j, white)
-                elif self.getNode(i/100, j/100) == 2:
+                elif self.getNode(i/scale, j/scale) == 2:
                     libbmp.set_pixel(i, j, green)
-                elif self.getNode(i/100, j/100) == 3:
+                elif self.getNode(i/scale, j/scale) == 3:
                     libbmp.set_pixel(i, j, red)
-                elif self.getNode(i/100, j/100) == 4:
+                elif self.getNode(i/scale, j/scale) == 4:
                     libbmp.set_pixel(i, j, blue)
                 else:
                     libbmp.set_pixel(i, j, grey)

@@ -6,6 +6,8 @@
 __author__ = 'hjason'
 __email__ = 'hjason2042@gmail.com'
 
+import sys
+
 from GridMap import GridMap
 from GridNode import GridNode
 from Heap import Heap
@@ -192,15 +194,15 @@ if __name__ == '__main__':
     gridMap = GridMap(20, 20, global_map)
     print '----------Original Map----------------------------'
     gridMap.printMap()
-    gridMap.write_bmp(24, 'map.bmp')
-    startNode = GridNode(gridMap, 2, 5)
-    goalNode = GridNode(gridMap, 2, 12)
+    gridMap.write_bmp(24, 16, 'map.bmp')
+    startNode = GridNode(gridMap, 8, 12)
+    goalNode = GridNode(gridMap, 10, 6)
     astarSearch = AStarSearch(gridMap, startNode, goalNode)
     if astarSearch.find_path():
         # astarSearch.print_path()
         print '----------Path Map----------------------------'
         path_map = astarSearch.get_pathMap()
         path_map.printMap()
-        path_map.write_bmp(24, 'path.bmp')
+        path_map.write_bmp(24, 16, 'path.bmp')
     else:
         print 'Path not found'
