@@ -11,9 +11,9 @@ __email__ = 'hjason2042@gmail.com'
 from ctypes import *
 
 class RGB_PIXEL(Structure):
-    _fields_ = [("BLUE", c_uint8),
-               ("GREEN", c_uint8),
-               ("RED", c_uint8),
+    _fields_ = [("blue", c_uint8),
+               ("green", c_uint8),
+               ("red", c_uint8),
                ("alpha", c_uint8)]
 
 class BMP_HEADER(Structure):
