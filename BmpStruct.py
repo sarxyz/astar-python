@@ -11,9 +11,9 @@ __email__ = 'hjason2042@gmail.com'
 from ctypes import *
 
 class RGB_PIXEL(Structure):
-    _fields_ = [("blue", c_uint8),
-               ("green", c_uint8),
-               ("red", c_uint8),
+    _fields_ = [("BLUE", c_uint8),
+               ("GREEN", c_uint8),
+               ("RED", c_uint8),
                ("alpha", c_uint8)]
 
 class BMP_HEADER(Structure):
@@ -42,14 +42,14 @@ class BMP_FILE(Structure):
                ("pixels", POINTER(POINTER(RGB_PIXEL))),
                ("colors", POINTER(RGB_PIXEL))]
 
-blue = RGB_PIXEL(0xe1, 0x69, 0x41, 0)
-green = RGB_PIXEL(0, 0xff, 0, 0)
-red = RGB_PIXEL(0, 0, 0xff, 0)
+BLUE = RGB_PIXEL(0xe1, 0x69, 0x41, 0)
+GREEN = RGB_PIXEL(0, 0xff, 0, 0)
+RED = RGB_PIXEL(0, 0, 0xff, 0)
 
-black = RGB_PIXEL(0, 0, 0, 0)
-white = RGB_PIXEL(0xff, 0xff, 0xff, 0)
-yellow = RGB_PIXEL(0x0, 0xff, 0xff, 0)
-grey = RGB_PIXEL(0xbe, 0xbe, 0xbe, 0)
+BLACK = RGB_PIXEL(0, 0, 0, 0)
+WHITE = RGB_PIXEL(0xff, 0xff, 0xff, 0)
+YELLOW = RGB_PIXEL(0x0, 0xff, 0xff, 0)
+GREY = RGB_PIXEL(0xbe, 0xbe, 0xbe, 0)
 
 if __name__ == '__main__':
     pass

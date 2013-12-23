@@ -29,7 +29,7 @@ class GridNode(object):
             if self.__xPos < 0 or self.__xPos >= width or self.__yPos < 0 or self.__yPos >= height:
                 return False
             else:
-                return self.__map.getNode(self.__xPos, self.__yPos)==1
+                return not self.__map.getNode(self.__xPos, self.__yPos)==9
     def getCost(self):
         return self.__map.getNode(self.__xPos, self.__yPos)
 

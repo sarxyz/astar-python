@@ -8,6 +8,7 @@ __email__ = 'hjason2042@gmail.com'
 
 import sys
 
+from GridMapData import *
 from GridMap import GridMap
 from GridNode import GridNode
 from Heap import Heap
@@ -167,42 +168,18 @@ class AStarSearch(object):
             return pathMap
 
 if __name__ == '__main__':
-    width = 20
-    height = 20
-    # 20*20
-    #            0001020304050607080910111213141516171819
-    global_map = [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1, #00
-                  1,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,1, #01
-                  1,9,9,1,1,9,9,9,1,9,1,9,1,9,1,9,9,9,1,1, #02
-                  1,9,9,1,1,9,9,9,1,9,1,9,1,9,1,9,9,9,1,1, #03
-                  1,9,1,1,1,1,9,9,1,9,1,9,1,1,1,1,9,9,1,1, #04
-                  1,9,1,1,9,1,1,1,1,9,1,1,1,1,9,1,1,1,1,1, #05
-                  1,9,9,9,9,1,1,1,1,1,1,9,9,9,9,1,1,1,1,1, #06
-                  1,9,9,9,9,9,9,9,9,1,1,1,9,9,9,9,9,9,9,1, #07
-                  1,9,1,1,1,1,1,1,1,1,1,9,1,1,1,1,1,1,1,1, #08
-                  1,9,1,9,9,9,9,9,9,9,1,1,9,9,9,9,9,9,9,1, #09
-                  1,9,1,1,1,1,9,1,1,9,1,1,1,1,1,1,1,1,1,1, #10
-                  1,9,9,9,9,9,1,9,1,9,1,9,9,9,9,9,1,1,1,1, #11
-                  1,9,1,9,1,9,9,9,1,9,1,9,1,9,1,9,9,9,1,1, #12
-                  1,9,1,9,1,9,9,9,1,9,1,9,1,9,1,9,9,9,1,1, #13
-                  1,9,1,1,1,1,9,9,1,9,1,9,1,1,1,1,9,9,1,1, #14
-                  1,9,1,1,9,1,1,1,1,9,1,1,1,1,9,1,1,1,1,1, #15
-                  1,9,9,9,9,1,1,1,1,1,1,9,9,9,9,1,1,1,1,1, #16
-                  1,1,9,9,9,9,9,9,9,1,1,1,9,9,9,1,9,9,9,9, #17
-                  1,9,1,1,1,1,1,1,1,1,1,9,1,1,1,1,1,1,1,1, #18
-                  1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,]#19
-    gridMap = GridMap(20, 20, global_map)
-    print '----------Original Map----------------------------'
-    gridMap.printMap()
+    width = 40
+    height = 40
+    wall_freq = 0.1
+    generator = GenerateGridMapData()
+    (data, start, goal) = generator.init(width, height, wall_freq)
+    gridMap = GridMap(width, height, data)
     gridMap.write_bmp(24, 16, 'map.bmp')
-    startNode = GridNode(gridMap, 8, 12)
-    goalNode = GridNode(gridMap, 10, 6)
+    startNode = GridNode(gridMap, start%width, start/width)
+    goalNode = GridNode(gridMap, goal%width, goal/width)
     astarSearch = AStarSearch(gridMap, startNode, goalNode)
     if astarSearch.find_path():
-        # astarSearch.print_path()
-        print '----------Path Map----------------------------'
         path_map = astarSearch.get_pathMap()
-        path_map.printMap()
         path_map.write_bmp(24, 16, 'path.bmp')
     else:
         print 'Path not found'

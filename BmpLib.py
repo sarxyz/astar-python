@@ -37,5 +37,5 @@ if __name__ == '__main__':
     libbmp.create(800, 600, 24)
     for i in range(800):
         for j in range(600):
-            libbmp.set_pixel(i, j, white)
+            libbmp.set_pixel(i, j, WHITE)
     libbmp.save("test.bmp")

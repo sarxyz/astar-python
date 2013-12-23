@@ -39,12 +39,12 @@ class GridMap(object):
 
     def write_bmp(self, depth, scale, filename):
         """Color definition
-start       green   2
-goal        red     3
-path        blue    4
+start       GREEN   2
+goal        RED     3
+path        BLUE    4
 
-obstacle    black   9
-non-obst    white   1
+wall        BLACK   9
+non-wall    WHITE   1
 """
         width = self.getWidth()
         height = self.getHeight()
@@ -53,17 +53,17 @@ non-obst    white   1
         for j in range(height*scale):
             for i in range(width*scale):
                 if i%scale<2 or j%scale<2:
-                    libbmp.set_pixel(i, j, black)
+                    libbmp.set_pixel(i, j, BLACK)
                 elif self.getNode(i/scale, j/scale) == 1:
-                    libbmp.set_pixel(i, j, white)
+                    libbmp.set_pixel(i, j, WHITE)
                 elif self.getNode(i/scale, j/scale) == 2:
-                    libbmp.set_pixel(i, j, green)
+                    libbmp.set_pixel(i, j, GREEN)
                 elif self.getNode(i/scale, j/scale) == 3:
-                    libbmp.set_pixel(i, j, red)
+                    libbmp.set_pixel(i, j, RED)
                 elif self.getNode(i/scale, j/scale) == 4:
-                    libbmp.set_pixel(i, j, blue)
+                    libbmp.set_pixel(i, j, BLUE)
                 else:
-                    libbmp.set_pixel(i, j, grey)
+                    libbmp.set_pixel(i, j, GREY)
         libbmp.save(filename)
 
 if __name__ == '__main__':
